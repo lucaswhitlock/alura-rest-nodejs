@@ -1,0 +1,9 @@
+{
+  "database": {
+    "name": "default_db",
+    "host": "localhost",
+    "port": "1433",
+    "user": "SA",
+    "password": "CorrectHorseBatteryStapleFor_"
+  }
+}

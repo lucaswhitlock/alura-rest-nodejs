@@ -1,0 +1,2 @@
+CREATE DATABASE default_db;
+GO
