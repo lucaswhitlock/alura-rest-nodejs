@@ -21,7 +21,6 @@ class DAO {
       if (!entity) throw new NotFound(this.model.getTableName());
       return entity;
     } catch (error) {
-      console.log(error.stack);
       throw new Error(error.message);
     }
   }
