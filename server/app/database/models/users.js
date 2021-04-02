@@ -8,6 +8,20 @@ const users = sequelize => {
         type: DataTypes.STRING,
         allowNull: false
       },
+      email: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          isEmail: {
+            args: true,
+            msg: "E-mail information provided is invalid!"
+          }
+        }
+      },
+      gender: {
+        type: DataTypes.STRING,
+        allowNull: false
+      },
       birth: {
         type: DataTypes.DATE,
         allowNull: false

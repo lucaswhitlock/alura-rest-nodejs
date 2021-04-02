@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "./node_modules/.bin/babel ./app --out-dir ../dist/ --copy-files",
+    "build": "./node_modules/.bin/babel ./app --out-dir ../dist --copy-files",
     "dev": "nodemon --exec babel-node app/server.js",
     "start": "pm2-runtime start ecosystem.config.js"
   },

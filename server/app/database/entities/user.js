@@ -9,9 +9,11 @@ import { NotFound } from "../../config/error/error";
 const model = database.users;
 
 class User {
-  constructor({ id, name, birth, login, password, createdAt, updatedAt }) {
+  constructor({ id, name, email, gender, birth, login, password, createdAt, updatedAt }) {
     this.id = id;
     this.name = name;
+    this.email = email;
+    this.gender = gender;
     this.birth = moment(birth);
     this.login = login;
     this.password = password;
@@ -28,6 +30,8 @@ class User {
       });
       await this.dao.create({
         name: this.name,
+        email: this.email,
+        gender: this.gender,
         birth: this.birth,
         login: this.login,
         password: this.password
@@ -45,6 +49,8 @@ class User {
   async find() {
     await this.dao.findById(this.id).then(user => {
       this.name = user.name;
+      this.email = user.email;
+      this.gender = user.gender;
       this.birth = user.birth;
       this.login = user.login;
       this.password = user.password;
@@ -63,10 +69,29 @@ class User {
   }
 
   async delete() {
-    await dao.remove(this.id)
+    await this.dao.remove(this.id)
       .catch(err => {
         throw new Error(err.message);
       });
+  }
+
+  async signin() {
+    var storedPassword = null;
+    await this.dao.findByDynamicField("login", this.login).then(user => {
+      this.name = user.name;
+      this.email = user.email;
+      this.gender = user.gender;
+      this.birth = user.birth;
+      this.createdAt = user.createdAt;
+      this.updatedAt = user.updatedAt;
+      storedPassword = user.password;
+    }).then(() => {
+      bcrypt.compare(this.password, storedPassword);
+    }).then(() => {
+      this.password = storedPassword;
+    }).catch(err => {
+      throw new Error(err.message);
+    })
   }
 };
 

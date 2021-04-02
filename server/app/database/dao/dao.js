@@ -23,6 +23,14 @@ class DAO {
     }
   }
 
+  async findByDynamicField(field, value) {
+    try {
+      return await this.model.findOne({ raw: true, where: { [field]: value } });
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  }
+
   async create(entity) {
     try {
       return await this.model.create(entity);
@@ -47,7 +55,7 @@ class DAO {
   async remove(id) {
     try {
       await this.findById(id).then(entity => {
-        this.model.destroy({ where: { id: entity.id }})
+        this.model.destroy({ where: { id: entity.id } })
           .then(destroyedRows => {
             return destroyedRows;
           });

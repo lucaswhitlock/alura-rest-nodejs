@@ -1,21 +1,43 @@
 FROM node:15.12.0-alpine3.10 as build-stage
 
+ENV REGION="dev"
+
 WORKDIR /app
+
+COPY ./server ./server
 
 COPY ./client ./client
 
-WORKDIR /app/client
+WORKDIR /app/server
 
 RUN npm install -s
 
 RUN npm run build
 
-FROM nginx:stable-alpine as release-stage
+WORKDIR /app/client
+
+RUN npm install -s
+
+RUN npm run build -- --mode $REGION
+
+FROM node:15.12.0-alpine3.10 as release
+
+ENV REGION="dev"
 
 WORKDIR /app
 
-COPY --from=build-stage /app/client/dist /usr/share/nginx/html
+COPY --from=build-stage /app/dist ./dist
 
-EXPOSE 80
+WORKDIR /app/dist
 
-CMD ["nginx", "-g", "daemon off;"]
+COPY package*.json ./
+
+COPY ecosystem.config.js ./
+
+RUN npm install --only=production -s
+
+RUN npm install pm2 -g
+
+EXPOSE 3000
+
+CMD npm run start -- --env $REGION

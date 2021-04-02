@@ -46,7 +46,7 @@ const updateUser = async (req, res, next) => {
 
 const deleteUser = async (req, res, next) => {
   try {
-    var user = new User({ id : req.params.id });
+    var user = new User({ id: req.params.id });
     await user.delete();
     res.status(204).end();
   } catch (err) {
@@ -54,4 +54,14 @@ const deleteUser = async (req, res, next) => {
   }
 };
 
-export { findAllUsers, findById, createUser, updateUser, deleteUser };
+const loginUser = async (req, res, next) => {
+  try {
+    var user = new User({ login: req.body.login, password: req.body.password });
+    await user.signin();
+    res.status(200).send(new ResponseModel(user, 200, "Ok!"));
+  } catch (err) {
+    next(err);
+  }
+}
+
+export { findAllUsers, findById, createUser, loginUser, updateUser, deleteUser };
