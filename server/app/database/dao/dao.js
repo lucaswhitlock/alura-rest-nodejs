@@ -17,15 +17,20 @@ class DAO {
 
   async findById(id) {
     try {
-      return await this.model.findOne({ raw: true, where: { id: id } });
+      var entity = await this.model.findOne({ raw: true, where: { id: id } });
+      if (!entity) throw new NotFound(this.model.getTableName());
+      return entity;
     } catch (error) {
-      throw new NotFound(this.model.getTableName());
+      console.log(error.stack);
+      throw new Error(error.message);
     }
   }
 
   async findByDynamicField(field, value) {
     try {
-      return await this.model.findOne({ raw: true, where: { [field]: value } });
+      var entity = await this.model.findOne({ raw: true, where: { [field]: value } });
+      if (!entity) throw new NotFound(this.model.getTableName());
+      return entity;
     } catch (error) {
       throw new Error(error.message);
     }

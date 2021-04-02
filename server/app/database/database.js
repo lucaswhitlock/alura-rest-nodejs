@@ -1,4 +1,4 @@
-//require("dotenv").config();
+// require("dotenv").config();
 import { NODE_CONFIG_DIR } from "../config/utils/utils";
 import config from "config";
 

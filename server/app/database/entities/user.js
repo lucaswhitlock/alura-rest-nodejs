@@ -78,6 +78,7 @@ class User {
   async signin() {
     var storedPassword = null;
     await this.dao.findByDynamicField("login", this.login).then(user => {
+      this.id = user.id;
       this.name = user.name;
       this.email = user.email;
       this.gender = user.gender;

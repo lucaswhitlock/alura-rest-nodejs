@@ -11,6 +11,8 @@ import { router } from "./routes/router";
 import { checkMiddlewareErrorStatusCode } from "./config/error/error";
 import ResponseModel from "./config/response/responseModel";
 
+import "./redis/blacklist";
+
 var server = express();
 
 server.use(cors());

@@ -4,6 +4,9 @@ import { DAO } from "../../database/dao/dao";
 
 import ResponseModel from "../../config/response/responseModel";
 
+import jwt from "jsonwebtoken";
+import { blacklistToken } from "../../redis/blacklist";
+
 const userDao = new DAO(database.users);
 
 const findAllUsers = async (req, res) => {
@@ -58,10 +61,20 @@ const loginUser = async (req, res, next) => {
   try {
     var user = new User({ login: req.body.login, password: req.body.password });
     await user.signin();
+    res.set('Authorization', jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: "1h" }));
     res.status(200).send(new ResponseModel(user, 200, "Ok!"));
   } catch (err) {
     next(err);
   }
 }
 
-export { findAllUsers, findById, createUser, loginUser, updateUser, deleteUser };
+const logoutUser = async (req, res, next) => {
+  try {
+    await blacklistToken(req.token);
+    res.status(204).end();
+  } catch (err) {
+    next(err);
+  }
+}
+
+export { findAllUsers, findById, createUser, loginUser, logoutUser, updateUser, deleteUser };
